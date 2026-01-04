@@ -39,6 +39,19 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     false
     )
 })
+function start_story () {
+    title.destroy()
+    play.destroy()
+    story.destroy()
+    sprites.destroy(nena)
+    scene.setBackgroundImage(assets.image`placeholder1`)
+    game.showLongText("TEXT 1", DialogLayout.Bottom)
+    scene.setBackgroundImage(assets.image`placeholder2`)
+    game.showLongText("TEXT 2", DialogLayout.Bottom)
+    scene.setBackgroundImage(assets.image`palceholder3`)
+    game.showLongText("TEXT 3", DialogLayout.Bottom)
+    start_menu()
+}
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     animation.runImageAnimation(
     nena,
@@ -52,6 +65,9 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Text, function (sprite, otherSpr
         sprite.sayText("Prem A per jugar", 100, false)
     } else {
         sprite.sayText("Prem A per veure la historia", 100, false)
+        if (controller.A.isPressed()) {
+            start_story()
+        }
     }
 })
 let story: TextSprite = null

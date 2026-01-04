@@ -47,6 +47,12 @@ def on_right_pressed():
         False)
 controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
 
+def start_story():
+    title.destroy()
+    play.destroy()
+    story.destroy()
+    nena.set_flag(SpriteFlag.INVISIBLE, True)
+
 def on_down_pressed():
     animation.run_image_animation(nena,
         assets.animation("""
@@ -57,7 +63,10 @@ def on_down_pressed():
 controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
 
 def on_on_overlap(sprite, otherSprite):
-    nena.say_text(":)")
+    if otherSprite == play:
+        sprite.say_text("Prem A per jugar", 100, False)
+    else:
+        sprite.say_text("Prem A per veure la historia", 100, False)
 sprites.on_overlap(SpriteKind.player, SpriteKind.text, on_on_overlap)
 
 story: TextSprite = None
