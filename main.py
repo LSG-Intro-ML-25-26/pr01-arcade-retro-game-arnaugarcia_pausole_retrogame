@@ -1,3 +1,7 @@
+# Fet per Arnau Garcia i Pau Sole
+
+## INPUTS
+
 def on_up_pressed():
     animation.run_image_animation(nena,
         assets.animation("""
@@ -5,21 +9,27 @@ def on_up_pressed():
             """),
         500,
         False)
+    if scene2 == 1 and nena.y >= ground_y:
+        nena.vy = -260
 controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
 
-def on_a_pressed():
-    if in_game == 1:
-        nena.vy = -150
-controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
+def on_down_pressed():
+    animation.run_image_animation(nena,
+        assets.animation("""
+            nena-animation-down
+            """),
+        500,
+        False)
+controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
 
-def on_on_overlap(sprite2, otherSprite2):
-    if otherSprite2 == play:
-        sprite2.say_text("Prem A per jugar", 100, False)
-    else:
-        sprite2.say_text("Prem A per veure la historia", 100, False)
-        if controller.A.is_pressed():
-            start_story()
-sprites.on_overlap(SpriteKind.player, SpriteKind.text, on_on_overlap)
+def on_right_pressed():
+    animation.run_image_animation(nena,
+        assets.animation("""
+            nena-animation-right
+            """),
+        500,
+        False)
+controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
 
 def on_left_pressed():
     animation.run_image_animation(nena,
@@ -30,9 +40,53 @@ def on_left_pressed():
         False)
 controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
 
+def on_b_pressed():
+    if scene2 == 2:
+        prepare_transition()
+        start_menu()
+controller.B.on_event(ControllerButtonEvent.PRESSED, on_b_pressed)
+
+def on_a_pressed():
+    if scene2 == 1 and nena.y >= ground_y:
+        nena.vy = -260
+controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
+
+
+## OVERLAP
+
+def on_on_overlap(sprite2, otherSprite2):
+    if otherSprite2 == play:
+        sprite2.say_text("Prem A per jugar", 100, False)
+        if controller.A.is_pressed():
+            start_game()
+    elif otherSprite2 == leaderboard:
+        sprite2.say_text("Prem A per veure les puntuacions", 100, False)
+        if controller.A.is_pressed():
+            show_leaderboard()
+    else:
+        sprite2.say_text("Prem A per veure la historia", 100, False)
+        if controller.A.is_pressed():
+            start_story()
+sprites.on_overlap(SpriteKind.player, SpriteKind.text, on_on_overlap)
+
+def on_on_overlap2(sprite, otherSprite):
+    global already_scored
+    otherSprite.destroy()
+    info.change_life_by(-1)
+    scene.camera_shake(4, 500)
+    if info.life() <= 0 and already_scored == False:
+        already_scored = True
+        save_score(info.score())
+
+sprites.on_overlap(SpriteKind.player, SpriteKind.enemy, on_on_overlap2)
+
+
+## FUNCIONS
+
+### CANVI DE PANTALLES
 def start_menu():
-    global in_game, title, play, story, nena
-    in_game = 0
+    global scene2, title, play, story, leaderboard, nena
+    scene2 = 0
     scene.set_background_image(assets.image("""
         menu_bg
         """))
@@ -40,26 +94,57 @@ def start_menu():
     title.set_max_font_height(9)
     play = textsprite.create("JUGAR")
     story = textsprite.create("HISTORIA")
+    leaderboard = textsprite.create("PUNTUACIONS")
     title.set_position(80, 10)
-    play.set_position(30, 90)
-    story.set_position(120, 90)
+    play.set_position(80, 40)
+    story.set_position(35, 90)
+    leaderboard.set_position(120, 90)
     play.set_kind(SpriteKind.text)
     story.set_kind(SpriteKind.text)
     play.set_flag(SpriteFlag.GHOST, False)
     story.set_flag(SpriteFlag.GHOST, False)
+    leaderboard.set_flag(SpriteFlag.GHOST, False)
     nena = sprites.create(assets.image("""
         nena-front
         """), SpriteKind.player)
     controller.move_sprite(nena)
     nena.set_stay_in_screen(True)
+
+def show_leaderboard():
+    global scene2
+    prepare_transition()
+    scene2 = 2
+
+    score_title = textsprite.create("TOP 5 PUNTUACIONS", 0, 3)
+    score_title.set_position(80, 15)
+    score_title.set_kind(SpriteKind.text)
+
+    scores = settings.read_number_array("high_scores")
+    
+    if not scores:
+        empty_msg = textsprite.create("No hi ha dades", 0, 2)
+        empty_msg.set_position(80, 60)
+        empty_msg.set_kind(SpriteKind.text)
+    else:
+        for i in range(len(scores)):
+            score_val = scores[i]
+            row = textsprite.create(str(i+1) + ". " + str(score_val), 0, 2)
+            row.set_position(80, 35 + (i * 15))
+            row.set_kind(SpriteKind.text)
+
+    score_back = textsprite.create("PREM B PER TORNAR", 0, 3)
+    score_back.set_position(80, 105)
+    score_back.set_kind(SpriteKind.text)
+
 def prepare_transition():
-    title.destroy()
-    play.destroy()
-    story.destroy()
-    sprites.destroy(nena)
+    sprites.destroy_all_sprites_of_kind(SpriteKind.text)
+    sprites.destroy_all_sprites_of_kind(SpriteKind.player)
+    sprites.destroy_all_sprites_of_kind(SpriteKind.enemy)
+
 def start_game():
-    global in_game, nena
-    in_game = 1
+    global scene2, nena
+    prepare_transition()
+    scene2 = 1
     scene.set_background_image(assets.image("""
         game_bg
         """))
@@ -69,17 +154,8 @@ def start_game():
         nena-front
         """), SpriteKind.player)
     nena.set_position(20, ground_y)
-    nena.ay = 350
+    nena.ay = 600
     nena.set_stay_in_screen(True)
-
-def on_right_pressed():
-    animation.run_image_animation(nena,
-        assets.animation("""
-            nena-animation-right
-            """),
-        500,
-        False)
-controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
 
 def start_story():
     prepare_transition()
@@ -97,41 +173,49 @@ def start_story():
     game.show_long_text("TEXT 3", DialogLayout.BOTTOM)
     start_menu()
 
-def on_down_pressed():
-    animation.run_image_animation(nena,
-        assets.animation("""
-            nena-animation-down
-            """),
-        500,
-        False)
-controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
 
-# Visual feedback
+### PUNTUACIONS
+def save_score(new_score):
+    scores = settings.read_number_array("high_scores")
+    if not scores:
+        scores = []
+    
+    scores.append(new_score)
+    
+    scores.sort()
+    scores.reverse()
+    
+    scores = scores[0:5]
+    
+    settings.write_number_array("high_scores", scores)
 
-def on_on_overlap2(sprite, otherSprite):
-    otherSprite.destroy()
-    info.change_life_by(-1)
-    scene.camera_shake(4, 500)
-sprites.on_overlap(SpriteKind.player, SpriteKind.enemy, on_on_overlap2)
+
+
+##INICI
 
 obstacle2: Sprite = None
 random_obstacle = 0
 story: TextSprite = None
 title: TextSprite = None
+leaderboard: TextSprite = None
 play: TextSprite = None
-in_game = 0
+scene2 = 0
 nena: Sprite = None
 ground_y = 0
 obstacle = None
 ground_y = 100
+score_to_win = 500
+already_scored = False
 start_menu()
 
-def on_on_update():
-    if in_game != 1:
-        return
+## UPDATES
 
+def on_on_update():
+    if scene2 != 1:
+        return
     info.change_score_by(1)
-    if info.score() >= 10000:
+    if info.score() >= score_to_win:
+        save_score(info.score())
         game.over(True)
     if nena.y > ground_y:
         nena.y = ground_y
@@ -139,10 +223,9 @@ def on_on_update():
 game.on_update(on_on_update)
 
 def on_update_interval():
-    if in_game != 1:
-            return
-            
     global random_obstacle, obstacle2
+    if scene2 != 1:
+        return
     random_obstacle = randint(1, 3)
     if random_obstacle == 1:
         obs_img = assets.image("""
