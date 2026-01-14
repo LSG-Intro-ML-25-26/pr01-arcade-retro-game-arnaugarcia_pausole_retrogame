@@ -1,6 +1,10 @@
-# Fet per Arnau Garcia i Pau Sole
+"""
 
-## INPUTS
+#INICI
+
+"""
+# Fet per Arnau Garcia i Pau Sole
+# # INPUTS
 
 def on_up_pressed():
     animation.run_image_animation(nena,
@@ -13,33 +17,6 @@ def on_up_pressed():
         nena.vy = -260
 controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
 
-def on_down_pressed():
-    animation.run_image_animation(nena,
-        assets.animation("""
-            nena-animation-down
-            """),
-        500,
-        False)
-controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
-
-def on_right_pressed():
-    animation.run_image_animation(nena,
-        assets.animation("""
-            nena-animation-right
-            """),
-        500,
-        False)
-controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
-
-def on_left_pressed():
-    animation.run_image_animation(nena,
-        assets.animation("""
-            nena-animation-left
-            """),
-        500,
-        False)
-controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
-
 def on_b_pressed():
     if scene2 == 2:
         prepare_transition()
@@ -51,8 +28,30 @@ def on_a_pressed():
         nena.vy = -260
 controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
 
-
-## OVERLAP
+def show_leaderboard():
+    global scene2, score_title, score_back
+    prepare_transition()
+    scene2 = 2
+    score_title = textsprite.create("TOP 5 PUNTUACIONS", 0, 3)
+    score_title.set_position(80, 15)
+    score_title.set_kind(SpriteKind.text)
+    scores = settings.read_number_array("high_scores")
+    if not (scores):
+        empty_msg = textsprite.create("No hi ha dades", 0, 2)
+        empty_msg.set_position(80, 60)
+        empty_msg.set_kind(SpriteKind.text)
+    else:
+        i = 0
+        while i <= len(scores) - 1:
+            score_val = scores[i]
+            row = textsprite.create("" + str((i + 1)) + ". " + ("" + str(score_val)), 0, 2)
+            row.set_position(80, 35 + i * 15)
+            row.set_kind(SpriteKind.text)
+            i += 1
+    score_back = textsprite.create("PREM B PER TORNAR", 0, 3)
+    score_back.set_position(80, 105)
+    score_back.set_kind(SpriteKind.text)
+# # OVERLAP
 
 def on_on_overlap(sprite2, otherSprite2):
     if otherSprite2 == play:
@@ -69,21 +68,17 @@ def on_on_overlap(sprite2, otherSprite2):
             start_story()
 sprites.on_overlap(SpriteKind.player, SpriteKind.text, on_on_overlap)
 
-def on_on_overlap2(sprite, otherSprite):
-    global already_scored
-    otherSprite.destroy()
-    info.change_life_by(-1)
-    scene.camera_shake(4, 500)
-    if info.life() <= 0 and already_scored == False:
-        already_scored = True
-        save_score(info.score())
+def on_left_pressed():
+    animation.run_image_animation(nena,
+        assets.animation("""
+            nena-animation-left
+            """),
+        500,
+        False)
+controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
 
-sprites.on_overlap(SpriteKind.player, SpriteKind.enemy, on_on_overlap2)
-
-
-## FUNCIONS
-
-### CANVI DE PANTALLES
+# # FUNCIONS
+# ## CANVI DE PANTALLES
 def start_menu():
     global scene2, title, play, story, leaderboard, nena
     scene2 = 0
@@ -109,38 +104,20 @@ def start_menu():
         """), SpriteKind.player)
     controller.move_sprite(nena)
     nena.set_stay_in_screen(True)
-
-def show_leaderboard():
-    global scene2
-    prepare_transition()
-    scene2 = 2
-
-    score_title = textsprite.create("TOP 5 PUNTUACIONS", 0, 3)
-    score_title.set_position(80, 15)
-    score_title.set_kind(SpriteKind.text)
-
-    scores = settings.read_number_array("high_scores")
-    
-    if not scores:
-        empty_msg = textsprite.create("No hi ha dades", 0, 2)
-        empty_msg.set_position(80, 60)
-        empty_msg.set_kind(SpriteKind.text)
-    else:
-        for i in range(len(scores)):
-            score_val = scores[i]
-            row = textsprite.create(str(i+1) + ". " + str(score_val), 0, 2)
-            row.set_position(80, 35 + (i * 15))
-            row.set_kind(SpriteKind.text)
-
-    score_back = textsprite.create("PREM B PER TORNAR", 0, 3)
-    score_back.set_position(80, 105)
-    score_back.set_kind(SpriteKind.text)
-
 def prepare_transition():
     sprites.destroy_all_sprites_of_kind(SpriteKind.text)
     sprites.destroy_all_sprites_of_kind(SpriteKind.player)
     sprites.destroy_all_sprites_of_kind(SpriteKind.enemy)
-
+# ## PUNTUACIONS
+def save_score(new_score: number):
+    scores2 = settings.read_number_array("high_scores")
+    if not (scores2):
+        scores2 = []
+    scores2.append(new_score)
+    scores2.sort()
+    scores2.reverse()
+    scores2 = scores2.slice(0, 5)
+    settings.write_number_array("high_scores", scores2)
 def start_game():
     global scene2, nena
     prepare_transition()
@@ -156,6 +133,15 @@ def start_game():
     nena.set_position(20, ground_y)
     nena.ay = 600
     nena.set_stay_in_screen(True)
+
+def on_right_pressed():
+    animation.run_image_animation(nena,
+        assets.animation("""
+            nena-animation-right
+            """),
+        500,
+        False)
+controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
 
 def start_story():
     prepare_transition()
@@ -173,42 +159,42 @@ def start_story():
     game.show_long_text("TEXT 3", DialogLayout.BOTTOM)
     start_menu()
 
+def on_down_pressed():
+    animation.run_image_animation(nena,
+        assets.animation("""
+            nena-animation-down
+            """),
+        500,
+        False)
+controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
 
-### PUNTUACIONS
-def save_score(new_score):
-    scores = settings.read_number_array("high_scores")
-    if not scores:
-        scores = []
-    
-    scores.append(new_score)
-    
-    scores.sort()
-    scores.reverse()
-    
-    scores = scores[0:5]
-    
-    settings.write_number_array("high_scores", scores)
-
-
-
-##INICI
+def on_on_overlap2(sprite, otherSprite):
+    global already_scored
+    otherSprite.destroy()
+    info.change_life_by(-1)
+    scene.camera_shake(4, 500)
+    if info.life() <= 0 and already_scored == False:
+        already_scored = True
+        save_score(info.score())
+sprites.on_overlap(SpriteKind.player, SpriteKind.enemy, on_on_overlap2)
 
 obstacle2: Sprite = None
 random_obstacle = 0
+already_scored = False
 story: TextSprite = None
 title: TextSprite = None
 leaderboard: TextSprite = None
 play: TextSprite = None
+score_back: TextSprite = None
+score_title: TextSprite = None
 scene2 = 0
 nena: Sprite = None
 ground_y = 0
 obstacle = None
 ground_y = 100
 score_to_win = 500
-already_scored = False
 start_menu()
-
-## UPDATES
+# # UPDATES
 
 def on_on_update():
     if scene2 != 1:
