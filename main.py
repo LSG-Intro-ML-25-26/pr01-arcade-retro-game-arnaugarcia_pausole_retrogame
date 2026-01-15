@@ -134,6 +134,16 @@ def start_game():
     nena.ay = 600
     nena.set_stay_in_screen(True)
 
+def on_on_overlap2(sprite3, otherSprite3):
+    global already_scored
+    otherSprite3.destroy()
+    info.change_life_by(-1)
+    scene.camera_shake(4, 500)
+    if info.life() <= 0 and already_scored == False:
+        already_scored = True
+        save_score(info.score())
+sprites.on_overlap(SpriteKind.player, SpriteKind.enemy, on_on_overlap2)
+
 def on_right_pressed():
     animation.run_image_animation(nena,
         assets.animation("""
@@ -168,18 +178,16 @@ def on_down_pressed():
         False)
 controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
 
-def on_on_overlap2(sprite, otherSprite):
-    global already_scored
+def on_on_overlap3(sprite, otherSprite):
     otherSprite.destroy()
-    info.change_life_by(-1)
-    scene.camera_shake(4, 500)
-    if info.life() <= 0 and already_scored == False:
-        already_scored = True
-        save_score(info.score())
-sprites.on_overlap(SpriteKind.player, SpriteKind.enemy, on_on_overlap2)
+    info.change_score_by(50)
+sprites.on_overlap(SpriteKind.player, SpriteKind.food, on_on_overlap3)
 
 obstacle2: Sprite = None
+coin: Sprite = None
+coin_img: Image = None
 random_obstacle = 0
+random_coin = 0
 already_scored = False
 story: TextSprite = None
 title: TextSprite = None
@@ -192,7 +200,7 @@ nena: Sprite = None
 ground_y = 0
 obstacle = None
 ground_y = 100
-score_to_win = 500
+score_to_win = 5000
 start_menu()
 # # UPDATES
 
@@ -209,6 +217,29 @@ def on_on_update():
 game.on_update(on_on_update)
 
 def on_update_interval():
+    global random_coin, coin_img, coin
+    if scene2 != 1:
+        return
+    random_coin = randint(1, 3)
+    if random_obstacle == 1:
+        coin_img = assets.image("""
+            coin_1
+            """)
+    elif random_obstacle == 2:
+        coin_img = assets.image("""
+            coin_2
+            """)
+    else:
+        coin_img = assets.image("""
+            coin_3
+            """)
+    coin = sprites.create(coin_img, SpriteKind.food)
+    coin.set_position(160, 60)
+    coin.vx = -80
+    coin.set_flag(SpriteFlag.AUTO_DESTROY, True)
+game.on_update_interval(5000, on_update_interval)
+
+def on_update_interval2():
     global random_obstacle, obstacle2
     if scene2 != 1:
         return
@@ -229,4 +260,4 @@ def on_update_interval():
     obstacle2.set_position(160, ground_y)
     obstacle2.vx = -80
     obstacle2.set_flag(SpriteFlag.AUTO_DESTROY, True)
-game.on_update_interval(1500, on_update_interval)
+game.on_update_interval(1500, on_update_interval2)
