@@ -1,27 +1,8 @@
-/** #INICI */
-//  Fet per Arnau Garcia i Pau Sole
-//  # INPUTS
-controller.up.onEvent(ControllerButtonEvent.Pressed, function on_up_pressed() {
+//  #INICI
+controller.down.onEvent(ControllerButtonEvent.Pressed, function on_down_pressed() {
     animation.runImageAnimation(nena, assets.animation`
-            nena-animation-up
+            nena-animation-down
             `, 500, false)
-    if (scene2 == 1 && nena.y >= ground_y) {
-        nena.vy = -260
-    }
-    
-})
-controller.B.onEvent(ControllerButtonEvent.Pressed, function on_b_pressed() {
-    if (scene2 == 2) {
-        prepare_transition()
-        start_menu()
-    }
-    
-})
-controller.A.onEvent(ControllerButtonEvent.Pressed, function on_a_pressed() {
-    if (scene2 == 1 && nena.y >= ground_y) {
-        nena.vy = -260
-    }
-    
 })
 function show_leaderboard() {
     let empty_msg: TextSprite;
@@ -78,18 +59,13 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Text, function on_on_overlap(spr
     }
     
 })
-controller.left.onEvent(ControllerButtonEvent.Pressed, function on_left_pressed() {
-    animation.runImageAnimation(nena, assets.animation`
-            nena-animation-left
-            `, 500, false)
-})
 //  # FUNCIONS
 //  ## CANVI DE PANTALLES
 function start_menu() {
     
     scene2 = 0
     scene.setBackgroundImage(assets.image`
-        menu_bg
+        start_bg
         `)
     title = textsprite.create("TREASURE ESCAPE", 0, 2)
     title.setMaxFontHeight(9)
@@ -112,6 +88,29 @@ function start_menu() {
     nena.setStayInScreen(true)
 }
 
+controller.right.onEvent(ControllerButtonEvent.Pressed, function on_right_pressed() {
+    animation.runImageAnimation(nena, assets.animation`
+            nena-animation-right
+            `, 500, false)
+})
+controller.left.onEvent(ControllerButtonEvent.Pressed, function on_left_pressed() {
+    animation.runImageAnimation(nena, assets.animation`
+            nena-animation-left
+            `, 500, false)
+})
+controller.A.onEvent(ControllerButtonEvent.Pressed, function on_a_pressed() {
+    if (scene2 == 1 && nena.y >= ground_y) {
+        nena.vy = -260
+    }
+    
+})
+controller.B.onEvent(ControllerButtonEvent.Pressed, function on_b_pressed() {
+    if (scene2 == 2) {
+        prepare_transition()
+        start_menu()
+    }
+    
+})
 function prepare_transition() {
     sprites.destroyAllSpritesOfKind(SpriteKind.Text)
     sprites.destroyAllSpritesOfKind(SpriteKind.Player)
@@ -160,11 +159,6 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function on_on_overlap2(s
     }
     
 })
-controller.right.onEvent(ControllerButtonEvent.Pressed, function on_right_pressed() {
-    animation.runImageAnimation(nena, assets.animation`
-            nena-animation-right
-            `, 500, false)
-})
 function start_story() {
     prepare_transition()
     scene.setBackgroundImage(assets.image`
@@ -182,10 +176,16 @@ function start_story() {
     start_menu()
 }
 
-controller.down.onEvent(ControllerButtonEvent.Pressed, function on_down_pressed() {
+//  Fet per Arnau Garcia i Pau Sole
+//  # INPUTS
+controller.up.onEvent(ControllerButtonEvent.Pressed, function on_up_pressed() {
     animation.runImageAnimation(nena, assets.animation`
-            nena-animation-down
+            nena-animation-up
             `, 500, false)
+    if (scene2 == 1 && nena.y >= ground_y) {
+        nena.vy = -260
+    }
+    
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function on_on_overlap3(sprite: Sprite, otherSprite: Sprite) {
     otherSprite.destroy()

@@ -1,32 +1,13 @@
-"""
+# #INICI
 
-#INICI
-
-"""
-# Fet per Arnau Garcia i Pau Sole
-# # INPUTS
-
-def on_up_pressed():
+def on_down_pressed():
     animation.run_image_animation(nena,
         assets.animation("""
-            nena-animation-up
+            nena-animation-down
             """),
         500,
         False)
-    if scene2 == 1 and nena.y >= ground_y:
-        nena.vy = -260
-controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
-
-def on_b_pressed():
-    if scene2 == 2:
-        prepare_transition()
-        start_menu()
-controller.B.on_event(ControllerButtonEvent.PRESSED, on_b_pressed)
-
-def on_a_pressed():
-    if scene2 == 1 and nena.y >= ground_y:
-        nena.vy = -260
-controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
+controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
 
 def show_leaderboard():
     global scene2, score_title, score_back
@@ -68,22 +49,13 @@ def on_on_overlap(sprite2, otherSprite2):
             start_story()
 sprites.on_overlap(SpriteKind.player, SpriteKind.text, on_on_overlap)
 
-def on_left_pressed():
-    animation.run_image_animation(nena,
-        assets.animation("""
-            nena-animation-left
-            """),
-        500,
-        False)
-controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
-
 # # FUNCIONS
 # ## CANVI DE PANTALLES
 def start_menu():
     global scene2, title, play, story, leaderboard, nena
     scene2 = 0
     scene.set_background_image(assets.image("""
-        menu_bg
+        start_bg
         """))
     title = textsprite.create("TREASURE ESCAPE", 0, 2)
     title.set_max_font_height(9)
@@ -104,6 +76,36 @@ def start_menu():
         """), SpriteKind.player)
     controller.move_sprite(nena)
     nena.set_stay_in_screen(True)
+
+def on_right_pressed():
+    animation.run_image_animation(nena,
+        assets.animation("""
+            nena-animation-right
+            """),
+        500,
+        False)
+controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
+
+def on_left_pressed():
+    animation.run_image_animation(nena,
+        assets.animation("""
+            nena-animation-left
+            """),
+        500,
+        False)
+controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
+
+def on_a_pressed():
+    if scene2 == 1 and nena.y >= ground_y:
+        nena.vy = -260
+controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
+
+def on_b_pressed():
+    if scene2 == 2:
+        prepare_transition()
+        start_menu()
+controller.B.on_event(ControllerButtonEvent.PRESSED, on_b_pressed)
+
 def prepare_transition():
     sprites.destroy_all_sprites_of_kind(SpriteKind.text)
     sprites.destroy_all_sprites_of_kind(SpriteKind.player)
@@ -144,15 +146,6 @@ def on_on_overlap2(sprite3, otherSprite3):
         save_score(info.score())
 sprites.on_overlap(SpriteKind.player, SpriteKind.enemy, on_on_overlap2)
 
-def on_right_pressed():
-    animation.run_image_animation(nena,
-        assets.animation("""
-            nena-animation-right
-            """),
-        500,
-        False)
-controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
-
 def start_story():
     prepare_transition()
     scene.set_background_image(assets.image("""
@@ -168,15 +161,19 @@ def start_story():
         """))
     game.show_long_text("TEXT 3", DialogLayout.BOTTOM)
     start_menu()
+# Fet per Arnau Garcia i Pau Sole
+# # INPUTS
 
-def on_down_pressed():
+def on_up_pressed():
     animation.run_image_animation(nena,
         assets.animation("""
-            nena-animation-down
+            nena-animation-up
             """),
         500,
         False)
-controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
+    if scene2 == 1 and nena.y >= ground_y:
+        nena.vy = -260
+controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
 
 def on_on_overlap3(sprite, otherSprite):
     otherSprite.destroy()
