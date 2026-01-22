@@ -1,12 +1,11 @@
-# #INICI
-
 def on_down_pressed():
-    animation.run_image_animation(nena,
-        assets.animation("""
-            marcel_walk_front
-            """),
-        100,
-        False)
+    if scene2 != 1:
+        animation.run_image_animation(nena,
+            assets.animation("""
+                marcel_walk_front
+                """),
+            100,
+            False)
 controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
 
 def show_leaderboard():
@@ -17,7 +16,7 @@ def show_leaderboard():
     score_title.set_position(80, 15)
     score_title.set_kind(SpriteKind.text)
     scores = settings.read_number_array("high_scores")
-    if not (scores):
+    if not scores:
         empty_msg = textsprite.create("No hi ha dades", 0, 2)
         empty_msg.set_position(80, 60)
         empty_msg.set_kind(SpriteKind.text)
@@ -25,7 +24,9 @@ def show_leaderboard():
         i = 0
         while i <= len(scores) - 1:
             score_val = scores[i]
-            row = textsprite.create("" + str((i + 1)) + ". " + ("" + str(score_val)), 0, 2)
+            row = textsprite.create("" + ("" + str((i + 1))) + ". " + ("" + ("" + str(score_val))),
+                0,
+                2)
             row.set_position(80, 35 + i * 15)
             row.set_kind(SpriteKind.text)
             i += 1
@@ -78,21 +79,23 @@ def start_menu():
     nena.set_stay_in_screen(True)
 
 def on_right_pressed():
-    animation.run_image_animation(nena,
-        assets.animation("""
-            marcel_walk_right0
-            """),
-        100,
-        False)
+    if scene2 != 1:
+        animation.run_image_animation(nena,
+            assets.animation("""
+                marcel_walk_right0
+                """),
+            100,
+            False)
 controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
 
 def on_left_pressed():
-    animation.run_image_animation(nena,
-        assets.animation("""
-            marcel_walk_left
-            """),
-        100,
-        False)
+    if scene2 != 1:
+        animation.run_image_animation(nena,
+            assets.animation("""
+                marcel_walk_left
+                """),
+            100,
+            False)
 controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
 
 def on_a_pressed():
@@ -113,7 +116,7 @@ def prepare_transition():
 # ## PUNTUACIONS
 def save_score(new_score: number):
     scores2 = settings.read_number_array("high_scores")
-    if not (scores2):
+    if not scores2:
         scores2 = []
     scores2.append(new_score)
     scores2.sort()
@@ -125,16 +128,22 @@ def start_game():
     prepare_transition()
     scene2 = 1
     scene.set_background_image(assets.image("""
-        game_bg
+        correr_bg
         """))
     info.set_life(2)
     info.set_score(0)
     nena = sprites.create(assets.image("""
-        nena-front
+        marcel_idle
         """), SpriteKind.player)
     nena.set_position(20, ground_y)
     nena.ay = 600
     nena.set_stay_in_screen(True)
+    animation.run_image_animation(nena,
+        assets.animation("""
+            marcel_walk_right0
+            """),
+        50,
+        True)
 
 def on_on_overlap2(sprite3, otherSprite3):
     global already_scored
@@ -149,11 +158,11 @@ sprites.on_overlap(SpriteKind.player, SpriteKind.enemy, on_on_overlap2)
 def start_story():
     prepare_transition()
     scene.set_background_image(assets.image("""
-        placeholder1
+        lasalle_bg
         """))
     game.show_long_text("S'HAN ACABAT LES CLASSES", DialogLayout.BOTTOM)
     scene.set_background_image(assets.image("""
-        placeholder2
+        correr_bg
         """))
     game.show_long_text("QUINA GANA... EXCLAMA EN MARCEL", DialogLayout.BOTTOM)
     scene.set_background_image(assets.image("""
@@ -170,13 +179,14 @@ def start_story():
 # # INPUTS
 
 def on_up_pressed():
-    animation.run_image_animation(nena,
-        assets.animation("""
-            marcel_walk_up
-            """),
-        100,
-        False)
-    if scene2 == 1 and nena.y >= ground_y:
+    if scene2 != 1:
+        animation.run_image_animation(nena,
+            assets.animation("""
+                marcel_walk_up
+                """),
+            100,
+            False)
+    elif scene2 == 1 and nena.y >= ground_y:
         nena.vy = -260
 controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
 
@@ -197,10 +207,11 @@ leaderboard: TextSprite = None
 play: TextSprite = None
 score_back: TextSprite = None
 score_title: TextSprite = None
-scene2 = 0
 nena: Sprite = None
+scene2 = 0
 ground_y = 0
 obstacle = None
+# #INICI
 ground_y = 100
 score_to_win = 5000
 start_menu()

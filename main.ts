@@ -1,4 +1,3 @@
-// #INICI
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     if (scene2 != 1) {
         animation.runImageAnimation(
@@ -156,11 +155,11 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite3, otherS
 })
 function start_story () {
     prepare_transition()
-    scene.setBackgroundImage(assets.image`placeholder1`)
+    scene.setBackgroundImage(assets.image`lasalle_bg`)
     game.showLongText("S'HAN ACABAT LES CLASSES", DialogLayout.Bottom)
     scene.setBackgroundImage(assets.image`correr_bg`)
     game.showLongText("QUINA GANA... EXCLAMA EN MARCEL", DialogLayout.Bottom)
-    scene.setBackgroundImage(assets.image`palceholder3`)
+    scene.setBackgroundImage(assets.image`rellotge_bg`)
     game.showLongText("SÓN QUASI LES NOU!", DialogLayout.Bottom)
     scene.setBackgroundImage(assets.image`palceholder3`)
     game.showLongText("VAL MÉS QUE M'AFANYI SI VULL ACONSEGUIR UN DONUT", DialogLayout.Bottom)
@@ -176,10 +175,8 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
         100,
         false
         )
-    } else {
-        if (scene2 == 1 && nena.y >= ground_y) {
-            nena.vy = -260
-        }
+    } else if (scene2 == 1 && nena.y >= ground_y) {
+        nena.vy = -260
     }
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
@@ -202,6 +199,7 @@ let nena: Sprite = null
 let scene2 = 0
 let ground_y = 0
 let obstacle = null
+// #INICI
 ground_y = 100
 let score_to_win = 5000
 start_menu()
