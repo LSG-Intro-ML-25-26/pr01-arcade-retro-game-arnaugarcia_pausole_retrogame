@@ -61,7 +61,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Text, function (sprite2, otherSp
 function start_menu () {
     scene2 = 0
     scene.setBackgroundImage(assets.image`start_bg`)
-    title = textsprite.create("DUNKIN' ROQUET", 1, 4)
+    title = textsprite.create("DUNKIN'ROQUET", 1, 4)
     title.setMaxFontHeight(10)
     play = textsprite.create("JUGAR", 4, 1)
     story = textsprite.create("HISTORIA", 4, 1)
