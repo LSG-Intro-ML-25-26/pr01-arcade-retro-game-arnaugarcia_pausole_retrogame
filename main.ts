@@ -158,10 +158,10 @@ function start_story () {
     scene.setBackgroundImage(assets.image`lasalle_bg`)
     game.showLongText("S'HAN ACABAT LES CLASSES", DialogLayout.Bottom)
     scene.setBackgroundImage(assets.image`correr_bg`)
-    game.showLongText("QUINA GANA... EXCLAMA EN MARCEL", DialogLayout.Bottom)
+    game.showLongText("QUINA GANA...", DialogLayout.Bottom)
     scene.setBackgroundImage(assets.image`rellotge_bg`)
     game.showLongText("SÓN QUASI LES NOU!", DialogLayout.Bottom)
-    scene.setBackgroundImage(assets.image`palceholder3`)
+    scene.setBackgroundImage(assets.image`dunkin_bg`)
     game.showLongText("VAL MÉS QUE M'AFANYI SI VULL ACONSEGUIR UN DONUT", DialogLayout.Bottom)
     start_menu()
 }

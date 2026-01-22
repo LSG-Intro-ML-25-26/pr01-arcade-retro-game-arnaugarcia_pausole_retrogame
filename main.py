@@ -16,7 +16,7 @@ def show_leaderboard():
     score_title.set_position(80, 15)
     score_title.set_kind(SpriteKind.text)
     scores = settings.read_number_array("high_scores")
-    if not scores:
+    if not (scores):
         empty_msg = textsprite.create("No hi ha dades", 0, 2)
         empty_msg.set_position(80, 60)
         empty_msg.set_kind(SpriteKind.text)
@@ -24,9 +24,7 @@ def show_leaderboard():
         i = 0
         while i <= len(scores) - 1:
             score_val = scores[i]
-            row = textsprite.create("" + ("" + str((i + 1))) + ". " + ("" + ("" + str(score_val))),
-                0,
-                2)
+            row = textsprite.create("" + str((i + 1)) + ". " + ("" + str(score_val)), 0, 2)
             row.set_position(80, 35 + i * 15)
             row.set_kind(SpriteKind.text)
             i += 1
@@ -116,7 +114,7 @@ def prepare_transition():
 # ## PUNTUACIONS
 def save_score(new_score: number):
     scores2 = settings.read_number_array("high_scores")
-    if not scores2:
+    if not (scores2):
         scores2 = []
     scores2.append(new_score)
     scores2.sort()
@@ -166,7 +164,7 @@ def start_story():
         """))
     game.show_long_text("QUINA GANA... EXCLAMA EN MARCEL", DialogLayout.BOTTOM)
     scene.set_background_image(assets.image("""
-        palceholder3
+        rellotge_bg
         """))
     game.show_long_text("SÓN QUASI LES NOU!", DialogLayout.BOTTOM)
     scene.set_background_image(assets.image("""
