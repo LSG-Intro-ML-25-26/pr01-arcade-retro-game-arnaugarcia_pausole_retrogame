@@ -3,9 +3,9 @@
 def on_down_pressed():
     animation.run_image_animation(nena,
         assets.animation("""
-            nena-animation-down
+            marcel_walk_front
             """),
-        500,
+        100,
         False)
 controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
 
@@ -57,22 +57,22 @@ def start_menu():
     scene.set_background_image(assets.image("""
         start_bg
         """))
-    title = textsprite.create("TREASURE ESCAPE", 0, 2)
-    title.set_max_font_height(9)
-    play = textsprite.create("JUGAR")
-    story = textsprite.create("HISTORIA")
-    leaderboard = textsprite.create("PUNTUACIONS")
+    title = textsprite.create("DUNKIN' ROQUET", 1, 4)
+    title.set_max_font_height(10)
+    play = textsprite.create("JUGAR", 4, 1)
+    story = textsprite.create("HISTORIA", 4, 1)
+    leaderboard = textsprite.create("PUNTUACIONS", 4, 1)
     title.set_position(80, 10)
-    play.set_position(80, 40)
-    story.set_position(35, 90)
-    leaderboard.set_position(120, 90)
+    play.set_position(80, 84)
+    story.set_position(35, 100)
+    leaderboard.set_position(120, 100)
     play.set_kind(SpriteKind.text)
     story.set_kind(SpriteKind.text)
     play.set_flag(SpriteFlag.GHOST, False)
     story.set_flag(SpriteFlag.GHOST, False)
     leaderboard.set_flag(SpriteFlag.GHOST, False)
     nena = sprites.create(assets.image("""
-        nena-front
+        marcel_idle
         """), SpriteKind.player)
     controller.move_sprite(nena)
     nena.set_stay_in_screen(True)
@@ -80,18 +80,18 @@ def start_menu():
 def on_right_pressed():
     animation.run_image_animation(nena,
         assets.animation("""
-            nena-animation-right
+            marcel_walk_right0
             """),
-        500,
+        100,
         False)
 controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
 
 def on_left_pressed():
     animation.run_image_animation(nena,
         assets.animation("""
-            nena-animation-left
+            marcel_walk_left
             """),
-        500,
+        100,
         False)
 controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
 
@@ -151,15 +151,20 @@ def start_story():
     scene.set_background_image(assets.image("""
         placeholder1
         """))
-    game.show_long_text("TEXT 1", DialogLayout.BOTTOM)
+    game.show_long_text("S'HAN ACABAT LES CLASSES", DialogLayout.BOTTOM)
     scene.set_background_image(assets.image("""
         placeholder2
         """))
-    game.show_long_text("TEXT 2", DialogLayout.BOTTOM)
+    game.show_long_text("QUINA GANA... EXCLAMA EN MARCEL", DialogLayout.BOTTOM)
     scene.set_background_image(assets.image("""
         palceholder3
         """))
-    game.show_long_text("TEXT 3", DialogLayout.BOTTOM)
+    game.show_long_text("SÓN QUASI LES NOU!", DialogLayout.BOTTOM)
+    scene.set_background_image(assets.image("""
+        palceholder3
+        """))
+    game.show_long_text("VAL MÉS QUE M'AFANYI SI VULL ACONSEGUIR UN DONUT",
+        DialogLayout.BOTTOM)
     start_menu()
 # Fet per Arnau Garcia i Pau Sole
 # # INPUTS
@@ -167,9 +172,9 @@ def start_story():
 def on_up_pressed():
     animation.run_image_animation(nena,
         assets.animation("""
-            nena-animation-up
+            marcel_walk_up
             """),
-        500,
+        100,
         False)
     if scene2 == 1 and nena.y >= ground_y:
         nena.vy = -260

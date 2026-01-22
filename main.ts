@@ -1,11 +1,13 @@
 // #INICI
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
-    animation.runImageAnimation(
-    nena,
-    assets.animation`marcel_walk_front`,
-    100,
-    false
-    )
+    if (scene2 != 1) {
+        animation.runImageAnimation(
+        nena,
+        assets.animation`marcel_walk_front`,
+        100,
+        false
+        )
+    }
 })
 function show_leaderboard () {
     let empty_msg: TextSprite;
@@ -60,7 +62,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Text, function (sprite2, otherSp
 function start_menu () {
     scene2 = 0
     scene.setBackgroundImage(assets.image`start_bg`)
-    title = textsprite.create("DUNKIN' MARCEL", 1, 4)
+    title = textsprite.create("DUNKIN' ROQUET", 1, 4)
     title.setMaxFontHeight(10)
     play = textsprite.create("JUGAR", 4, 1)
     story = textsprite.create("HISTORIA", 4, 1)
@@ -79,20 +81,24 @@ function start_menu () {
     nena.setStayInScreen(true)
 }
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
-    animation.runImageAnimation(
-    nena,
-    assets.animation`marcel_walk_right0`,
-    100,
-    false
-    )
+    if (scene2 != 1) {
+        animation.runImageAnimation(
+        nena,
+        assets.animation`marcel_walk_right0`,
+        100,
+        false
+        )
+    }
 })
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
-    animation.runImageAnimation(
-    nena,
-    assets.animation`marcel_walk_left`,
-    100,
-    false
-    )
+    if (scene2 != 1) {
+        animation.runImageAnimation(
+        nena,
+        assets.animation`marcel_walk_left`,
+        100,
+        false
+        )
+    }
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (scene2 == 1 && nena.y >= ground_y) {
@@ -125,13 +131,19 @@ settings.writeNumberArray("high_scores", scores2)
 function start_game () {
     prepare_transition()
     scene2 = 1
-    scene.setBackgroundImage(assets.image`game_bg`)
+    scene.setBackgroundImage(assets.image`correr_bg`)
     info.setLife(2)
     info.setScore(0)
-    nena = sprites.create(assets.image`nena-front`, SpriteKind.Player)
+    nena = sprites.create(assets.image`marcel_idle`, SpriteKind.Player)
     nena.setPosition(20, ground_y)
     nena.ay = 600
     nena.setStayInScreen(true)
+    animation.runImageAnimation(
+    nena,
+    assets.animation`marcel_walk_right0`,
+    50,
+    true
+    )
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite3, otherSprite3) {
     otherSprite3.destroy()
@@ -145,24 +157,29 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite3, otherS
 function start_story () {
     prepare_transition()
     scene.setBackgroundImage(assets.image`placeholder1`)
-    game.showLongText("TEXT 1", DialogLayout.Bottom)
-    scene.setBackgroundImage(assets.image`placeholder2`)
-    game.showLongText("TEXT 2", DialogLayout.Bottom)
+    game.showLongText("S'HAN ACABAT LES CLASSES", DialogLayout.Bottom)
+    scene.setBackgroundImage(assets.image`correr_bg`)
+    game.showLongText("QUINA GANA... EXCLAMA EN MARCEL", DialogLayout.Bottom)
     scene.setBackgroundImage(assets.image`palceholder3`)
-    game.showLongText("TEXT 3", DialogLayout.Bottom)
+    game.showLongText("SÓN QUASI LES NOU!", DialogLayout.Bottom)
+    scene.setBackgroundImage(assets.image`palceholder3`)
+    game.showLongText("VAL MÉS QUE M'AFANYI SI VULL ACONSEGUIR UN DONUT", DialogLayout.Bottom)
     start_menu()
 }
 // Fet per Arnau Garcia i Pau Sole
 // # INPUTS
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
-    animation.runImageAnimation(
-    nena,
-    assets.animation`marcel_walk_up`,
-    100,
-    false
-    )
-    if (scene2 == 1 && nena.y >= ground_y) {
-        nena.vy = -260
+    if (scene2 != 1) {
+        animation.runImageAnimation(
+        nena,
+        assets.animation`marcel_walk_up`,
+        100,
+        false
+        )
+    } else {
+        if (scene2 == 1 && nena.y >= ground_y) {
+            nena.vy = -260
+        }
     }
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
@@ -181,8 +198,8 @@ let leaderboard: TextSprite = null
 let play: TextSprite = null
 let score_back: TextSprite = null
 let score_title: TextSprite = null
-let scene2 = 0
 let nena: Sprite = null
+let scene2 = 0
 let ground_y = 0
 let obstacle = null
 ground_y = 100
