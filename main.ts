@@ -1,11 +1,26 @@
-controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
+// Fet per Arnau Garcia i Pau Sole
+// # INPUTS
+controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     if (scene2 != 1) {
         animation.runImageAnimation(
         nena,
-        assets.animation`marcel_walk_front`,
+        assets.animation`marcel_walk_up`,
         100,
         false
         )
+    } else if (scene2 == 1 && nena.y >= ground_y) {
+        nena.vy = -260
+    }
+})
+controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (scene2 == 2) {
+        prepare_transition()
+        start_menu()
+    }
+})
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (scene2 == 1 && nena.y >= ground_y) {
+        nena.vy = -260
     }
 })
 function show_leaderboard () {
@@ -56,6 +71,16 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Text, function (sprite2, otherSp
         }
     }
 })
+controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (scene2 != 1) {
+        animation.runImageAnimation(
+        nena,
+        assets.animation`marcel_walk_left`,
+        100,
+        false
+        )
+    }
+})
 // # FUNCIONS
 // ## CANVI DE PANTALLES
 function start_menu () {
@@ -79,37 +104,6 @@ function start_menu () {
     controller.moveSprite(nena)
     nena.setStayInScreen(true)
 }
-controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (scene2 != 1) {
-        animation.runImageAnimation(
-        nena,
-        assets.animation`marcel_walk_right0`,
-        100,
-        false
-        )
-    }
-})
-controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (scene2 != 1) {
-        animation.runImageAnimation(
-        nena,
-        assets.animation`marcel_walk_left`,
-        100,
-        false
-        )
-    }
-})
-controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (scene2 == 1 && nena.y >= ground_y) {
-        nena.vy = -260
-    }
-})
-controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (scene2 == 2) {
-        prepare_transition()
-        start_menu()
-    }
-})
 function prepare_transition () {
     sprites.destroyAllSpritesOfKind(SpriteKind.Text)
     sprites.destroyAllSpritesOfKind(SpriteKind.Player)
@@ -131,7 +125,7 @@ function start_game () {
     prepare_transition()
     scene2 = 1
     scene.setBackgroundImage(assets.image`correr_bg`)
-    info.setLife(2)
+    info.setLife(3)
     info.setScore(0)
     nena = sprites.create(assets.image`marcel_idle`, SpriteKind.Player)
     nena.setPosition(20, ground_y)
@@ -153,6 +147,16 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite3, otherS
         save_score(info.score())
     }
 })
+controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (scene2 != 1) {
+        animation.runImageAnimation(
+        nena,
+        assets.animation`marcel_walk_right0`,
+        100,
+        false
+        )
+    }
+})
 function start_story () {
     prepare_transition()
     scene.setBackgroundImage(assets.image`lasalle_bg`)
@@ -165,28 +169,27 @@ function start_story () {
     game.showLongText("VAL MÉS QUE M'AFANYI SI VULL ACONSEGUIR UN DONUT", DialogLayout.Bottom)
     start_menu()
 }
-// Fet per Arnau Garcia i Pau Sole
-// # INPUTS
-controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
+controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     if (scene2 != 1) {
         animation.runImageAnimation(
         nena,
-        assets.animation`marcel_walk_up`,
+        assets.animation`marcel_walk_front`,
         100,
         false
         )
-    } else if (scene2 == 1 && nena.y >= ground_y) {
-        nena.vy = -260
     }
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
     otherSprite.destroy()
-    info.changeScoreBy(50)
+    info.changeScoreBy(100)
+    if (random_coin == 5 && info.life() < 3) {
+        info.setLife(info.life() + 1)
+    }
 })
 let obstacle2: Sprite = null
+let random_obstacle = 0
 let coin: Sprite = null
 let coin_img: Image = null
-let random_obstacle = 0
 let random_coin = 0
 let already_scored = false
 let story: TextSprite = null
@@ -222,10 +225,10 @@ game.onUpdateInterval(5000, function () {
     if (scene2 != 1) {
         return
     }
-    random_coin = randint(1, 3)
-    if (random_obstacle == 1) {
+    random_coin = randint(1, 5)
+    if (random_coin == 1 || random_coin == 2) {
         coin_img = assets.image`coin_1`
-    } else if (random_obstacle == 2) {
+    } else if (random_coin == 3 || random_coin == 4) {
         coin_img = assets.image`coin_2`
     } else {
         coin_img = assets.image`coin_3`
