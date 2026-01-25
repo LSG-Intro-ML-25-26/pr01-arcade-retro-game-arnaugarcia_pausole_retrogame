@@ -1,12 +1,28 @@
-def on_down_pressed():
+# Fet per Arnau Garcia i Pau Sole
+# # INPUTS
+
+def on_up_pressed():
     if scene2 != 1:
         animation.run_image_animation(nena,
             assets.animation("""
-                marcel_walk_front
+                marcel_walk_up
                 """),
             100,
             False)
-controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
+    elif scene2 == 1 and nena.y >= ground_y:
+        nena.vy = -260
+controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
+
+def on_b_pressed():
+    if scene2 == 2:
+        prepare_transition()
+        start_menu()
+controller.B.on_event(ControllerButtonEvent.PRESSED, on_b_pressed)
+
+def on_a_pressed():
+    if scene2 == 1 and nena.y >= ground_y:
+        nena.vy = -260
+controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
 
 def show_leaderboard():
     global scene2, score_title, score_back
@@ -48,6 +64,16 @@ def on_on_overlap(sprite2, otherSprite2):
             start_story()
 sprites.on_overlap(SpriteKind.player, SpriteKind.text, on_on_overlap)
 
+def on_left_pressed():
+    if scene2 != 1:
+        animation.run_image_animation(nena,
+            assets.animation("""
+                marcel_walk_left
+                """),
+            100,
+            False)
+controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
+
 # # FUNCIONS
 # ## CANVI DE PANTALLES
 def start_menu():
@@ -56,7 +82,7 @@ def start_menu():
     scene.set_background_image(assets.image("""
         start_bg
         """))
-    title = textsprite.create("DUNKIN' ROQUET", 1, 4)
+    title = textsprite.create("DUNKIN'ROQUET", 1, 4)
     title.set_max_font_height(10)
     play = textsprite.create("JUGAR", 4, 1)
     story = textsprite.create("HISTORIA", 4, 1)
@@ -75,38 +101,6 @@ def start_menu():
         """), SpriteKind.player)
     controller.move_sprite(nena)
     nena.set_stay_in_screen(True)
-
-def on_right_pressed():
-    if scene2 != 1:
-        animation.run_image_animation(nena,
-            assets.animation("""
-                marcel_walk_right0
-                """),
-            100,
-            False)
-controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
-
-def on_left_pressed():
-    if scene2 != 1:
-        animation.run_image_animation(nena,
-            assets.animation("""
-                marcel_walk_left
-                """),
-            100,
-            False)
-controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
-
-def on_a_pressed():
-    if scene2 == 1 and nena.y >= ground_y:
-        nena.vy = -260
-controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
-
-def on_b_pressed():
-    if scene2 == 2:
-        prepare_transition()
-        start_menu()
-controller.B.on_event(ControllerButtonEvent.PRESSED, on_b_pressed)
-
 def prepare_transition():
     sprites.destroy_all_sprites_of_kind(SpriteKind.text)
     sprites.destroy_all_sprites_of_kind(SpriteKind.player)
@@ -128,7 +122,7 @@ def start_game():
     scene.set_background_image(assets.image("""
         correr_bg
         """))
-    info.set_life(2)
+    info.set_life(3)
     info.set_score(0)
     nena = sprites.create(assets.image("""
         marcel_idle
@@ -153,6 +147,16 @@ def on_on_overlap2(sprite3, otherSprite3):
         save_score(info.score())
 sprites.on_overlap(SpriteKind.player, SpriteKind.enemy, on_on_overlap2)
 
+def on_right_pressed():
+    if scene2 != 1:
+        animation.run_image_animation(nena,
+            assets.animation("""
+                marcel_walk_right0
+                """),
+            100,
+            False)
+controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
+
 def start_story():
     prepare_transition()
     scene.set_background_image(assets.image("""
@@ -162,41 +166,39 @@ def start_story():
     scene.set_background_image(assets.image("""
         correr_bg
         """))
-    game.show_long_text("QUINA GANA... EXCLAMA EN MARCEL", DialogLayout.BOTTOM)
+    game.show_long_text("QUINA GANA...", DialogLayout.BOTTOM)
     scene.set_background_image(assets.image("""
         rellotge_bg
         """))
     game.show_long_text("SÓN QUASI LES NOU!", DialogLayout.BOTTOM)
     scene.set_background_image(assets.image("""
-        palceholder3
+        dunkin_bg
         """))
     game.show_long_text("VAL MÉS QUE M'AFANYI SI VULL ACONSEGUIR UN DONUT",
         DialogLayout.BOTTOM)
     start_menu()
-# Fet per Arnau Garcia i Pau Sole
-# # INPUTS
 
-def on_up_pressed():
+def on_down_pressed():
     if scene2 != 1:
         animation.run_image_animation(nena,
             assets.animation("""
-                marcel_walk_up
+                marcel_walk_front
                 """),
             100,
             False)
-    elif scene2 == 1 and nena.y >= ground_y:
-        nena.vy = -260
-controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
+controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
 
 def on_on_overlap3(sprite, otherSprite):
     otherSprite.destroy()
-    info.change_score_by(50)
+    info.change_score_by(100)
+    if random_coin == 5 and info.life() < 3:
+        info.set_life(info.life() + 1)
 sprites.on_overlap(SpriteKind.player, SpriteKind.food, on_on_overlap3)
 
 obstacle2: Sprite = None
+random_obstacle = 0
 coin: Sprite = None
 coin_img: Image = None
-random_obstacle = 0
 random_coin = 0
 already_scored = False
 story: TextSprite = None
@@ -231,12 +233,12 @@ def on_update_interval():
     global random_coin, coin_img, coin
     if scene2 != 1:
         return
-    random_coin = randint(1, 3)
-    if random_obstacle == 1:
+    random_coin = randint(1, 5)
+    if random_coin == 1 or random_coin == 2:
         coin_img = assets.image("""
             coin_1
             """)
-    elif random_obstacle == 2:
+    elif random_coin == 3 or random_coin == 4:
         coin_img = assets.image("""
             coin_2
             """)
@@ -261,11 +263,11 @@ def on_update_interval2():
             """)
     elif random_obstacle == 2:
         obs_img = assets.image("""
-            obstacle_2
+            obstacle_002
             """)
     else:
         obs_img = assets.image("""
-            obstacle_3
+            obstacle_03
             """)
     obstacle2 = sprites.create(obs_img, SpriteKind.enemy)
     obstacle2.set_position(160, ground_y)

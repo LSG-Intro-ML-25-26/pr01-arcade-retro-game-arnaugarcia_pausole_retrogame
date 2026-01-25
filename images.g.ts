@@ -1,4 +1,4 @@
-// Código generado automáticamente. No editar.
+// Auto-generated code. Do not edit.
 namespace myImages {
 
     helpers._registerFactory("image", function(name: string) {
@@ -1525,6 +1525,33 @@ cc7766776777677677676667767766cc
 ...............fee..............
 ................e...............
 `;
+            case "image13":
+            case "obstacle_03":return img`
+......cc66......
+.....c6576c.....
+....c677576c....
+....cc677666....
+...cc6c6667cc...
+..6c666777cc6c..
+..c76666766776..
+..c6777777776c..
+..cc67777376cc..
+.c67cc76676676c.
+.c777666667777c.
+.c6777777777766.
+.cc7767776776666
+c676cc6766666776
+c777766666677776
+cc7777777777776c
+.c676777677767c.
+..cc667666766c..
+...ccc6c66ccc...
+.....cccccc.....
+.......ee.......
+......eeee......
+.....eeeeee.....
+.......ee.......
+`;
             case "image20":
             case "obstacle_2":return img`
 .666666666666666666666666666666.
@@ -1559,33 +1586,6 @@ f777777777777727777777777777778f
 ..ff....ccccccccccccccc.....ff..
 ..ff........................ff..
 cccccccccccccccccccccccccccccccc
-`;
-            case "image13":
-            case "obstacle_03":return img`
-......cc66......
-.....c6576c.....
-....c677576c....
-....cc677666....
-...cc6c6667cc...
-..6c666777cc6c..
-..c76666766776..
-..c6777777776c..
-..cc67777376cc..
-.c67cc76676676c.
-.c777666667777c.
-.c6777777777766.
-.cc7767776776666
-c676cc6766666776
-c777766666677776
-cc7777777777776c
-.c676777677767c.
-..cc667666766c..
-...ccc6c66ccc...
-.....cccccc.....
-.......ee.......
-......eeee......
-.....eeeeee.....
-.......ee.......
 `;
             case "image21":
             case "obstacle_3":return img`
@@ -2062,4 +2062,4 @@ f f f f f e f f f f c c f
     })
 
 }
-// Código generado automáticamente. No editar.
+// Auto-generated code. Do not edit.

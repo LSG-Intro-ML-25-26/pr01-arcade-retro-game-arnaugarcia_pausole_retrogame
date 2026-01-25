@@ -1,11 +1,26 @@
-controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
+// Fet per Arnau Garcia i Pau Sole
+// # INPUTS
+controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     if (scene2 != 1) {
         animation.runImageAnimation(
         nena,
-        assets.animation`marcel_walk_front`,
+        assets.animation`marcel_walk_up`,
         100,
         false
         )
+    } else if (scene2 == 1 && nena.y >= ground_y) {
+        nena.vy = -260
+    }
+})
+controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (scene2 == 2) {
+        prepare_transition()
+        start_menu()
+    }
+})
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (scene2 == 1 && nena.y >= ground_y) {
+        nena.vy = -260
     }
 })
 function show_leaderboard () {
@@ -56,6 +71,16 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Text, function (sprite2, otherSp
         }
     }
 })
+controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (scene2 != 1) {
+        animation.runImageAnimation(
+        nena,
+        assets.animation`marcel_walk_left`,
+        100,
+        false
+        )
+    }
+})
 // # FUNCIONS
 // ## CANVI DE PANTALLES
 function start_menu () {
@@ -78,38 +103,9 @@ function start_menu () {
     nena = sprites.create(assets.image`marcel_idle`, SpriteKind.Player)
     controller.moveSprite(nena)
     nena.setStayInScreen(true)
+    music.stopAllSounds()
+    music.play(music.stringPlayable("C5 G B A F A C5 B ", 120), music.PlaybackMode.LoopingInBackground)
 }
-controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (scene2 != 1) {
-        animation.runImageAnimation(
-        nena,
-        assets.animation`marcel_walk_right0`,
-        100,
-        false
-        )
-    }
-})
-controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (scene2 != 1) {
-        animation.runImageAnimation(
-        nena,
-        assets.animation`marcel_walk_left`,
-        100,
-        false
-        )
-    }
-})
-controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (scene2 == 1 && nena.y >= ground_y) {
-        nena.vy = -260
-    }
-})
-controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (scene2 == 2) {
-        prepare_transition()
-        start_menu()
-    }
-})
 function prepare_transition () {
     sprites.destroyAllSpritesOfKind(SpriteKind.Text)
     sprites.destroyAllSpritesOfKind(SpriteKind.Player)
@@ -143,14 +139,27 @@ function start_game () {
     50,
     true
     )
+    music.stopAllSounds()
+    music.play(music.stringPlayable("G B A G C5 B A B ", 120), music.PlaybackMode.LoopingInBackground)
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite3, otherSprite3) {
     otherSprite3.destroy()
+    music.play(music.melodyPlayable(music.pewPew), music.PlaybackMode.UntilDone)
     info.changeLifeBy(-1)
     scene.cameraShake(4, 500)
     if (info.life() <= 0 && already_scored == false) {
         already_scored = true
         save_score(info.score())
+    }
+})
+controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (scene2 != 1) {
+        animation.runImageAnimation(
+        nena,
+        assets.animation`marcel_walk_right0`,
+        100,
+        false
+        )
     }
 })
 function start_story () {
@@ -165,22 +174,19 @@ function start_story () {
     game.showLongText("VAL MÉS QUE M'AFANYI SI VULL ACONSEGUIR UN DONUT", DialogLayout.Bottom)
     start_menu()
 }
-// Fet per Arnau Garcia i Pau Sole
-// # INPUTS
-controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
+controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     if (scene2 != 1) {
         animation.runImageAnimation(
         nena,
-        assets.animation`marcel_walk_up`,
+        assets.animation`marcel_walk_front`,
         100,
         false
         )
-    } else if (scene2 == 1 && nena.y >= ground_y) {
-        nena.vy = -260
     }
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
     otherSprite.destroy()
+    music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.UntilDone)
     info.changeScoreBy(100)
     if (random_coin == 5 && info.life() < 3) {
         info.setLife(info.life() + 1)
