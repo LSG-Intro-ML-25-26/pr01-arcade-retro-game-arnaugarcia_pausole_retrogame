@@ -1,26 +1,11 @@
-// Fet per Arnau Garcia i Pau Sole
-// # INPUTS
-controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
+controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     if (scene2 != 1) {
         animation.runImageAnimation(
         nena,
-        assets.animation`marcel_walk_up`,
+        assets.animation`marcel_walk_front`,
         100,
         false
         )
-    } else if (scene2 == 1 && nena.y >= ground_y) {
-        nena.vy = -260
-    }
-})
-controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (scene2 == 2) {
-        prepare_transition()
-        start_menu()
-    }
-})
-controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (scene2 == 1 && nena.y >= ground_y) {
-        nena.vy = -260
     }
 })
 function show_leaderboard () {
@@ -71,16 +56,6 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Text, function (sprite2, otherSp
         }
     }
 })
-controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (scene2 != 1) {
-        animation.runImageAnimation(
-        nena,
-        assets.animation`marcel_walk_left`,
-        100,
-        false
-        )
-    }
-})
 // # FUNCIONS
 // ## CANVI DE PANTALLES
 function start_menu () {
@@ -104,6 +79,37 @@ function start_menu () {
     controller.moveSprite(nena)
     nena.setStayInScreen(true)
 }
+controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (scene2 != 1) {
+        animation.runImageAnimation(
+        nena,
+        assets.animation`marcel_walk_right0`,
+        100,
+        false
+        )
+    }
+})
+controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (scene2 != 1) {
+        animation.runImageAnimation(
+        nena,
+        assets.animation`marcel_walk_left`,
+        100,
+        false
+        )
+    }
+})
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (scene2 == 1 && nena.y >= ground_y) {
+        nena.vy = -260
+    }
+})
+controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (scene2 == 2) {
+        prepare_transition()
+        start_menu()
+    }
+})
 function prepare_transition () {
     sprites.destroyAllSpritesOfKind(SpriteKind.Text)
     sprites.destroyAllSpritesOfKind(SpriteKind.Player)
@@ -147,16 +153,6 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite3, otherS
         save_score(info.score())
     }
 })
-controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (scene2 != 1) {
-        animation.runImageAnimation(
-        nena,
-        assets.animation`marcel_walk_right0`,
-        100,
-        false
-        )
-    }
-})
 function start_story () {
     prepare_transition()
     scene.setBackgroundImage(assets.image`lasalle_bg`)
@@ -169,14 +165,18 @@ function start_story () {
     game.showLongText("VAL MÉS QUE M'AFANYI SI VULL ACONSEGUIR UN DONUT", DialogLayout.Bottom)
     start_menu()
 }
-controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
+// Fet per Arnau Garcia i Pau Sole
+// # INPUTS
+controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     if (scene2 != 1) {
         animation.runImageAnimation(
         nena,
-        assets.animation`marcel_walk_front`,
+        assets.animation`marcel_walk_up`,
         100,
         false
         )
+    } else if (scene2 == 1 && nena.y >= ground_y) {
+        nena.vy = -260
     }
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
