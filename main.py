@@ -1,13 +1,34 @@
-def on_down_pressed():
+# # CODI FET PER ARNAU GARCIA I PAU SOLE
+# # Tecla amunt
+
+def on_up_pressed():
     if scene2 != 1:
-        animation.run_image_animation(nena,
+        animation.run_image_animation(player_marcel,
             assets.animation("""
-                marcel_walk_front
+                marcel_walk_up
                 """),
             100,
             False)
-controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
+    elif scene2 == 1 and player_marcel.y >= ground_y:
+        player_marcel.vy = -260
+controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
 
+# # Tecla b
+
+def on_b_pressed():
+    if scene2 == 2:
+        prepare_transition()
+        start_menu()
+controller.B.on_event(ControllerButtonEvent.PRESSED, on_b_pressed)
+
+# # Tecla a
+
+def on_a_pressed():
+    if scene2 == 1 and player_marcel.y >= ground_y:
+        player_marcel.vy = -260
+controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
+
+# # Ensenyar les puntuacions
 def show_leaderboard():
     global scene2, score_title, score_back
     prepare_transition()
@@ -15,26 +36,28 @@ def show_leaderboard():
         background_stats
         """))
     scene2 = 2
-    score_title = textsprite.create("TOP 5 PUNTUACIONS", 0, 3)
+    score_title = textsprite.create("TOP 5 PUNTUACIONS", 1, 4)
     score_title.set_position(80, 15)
     score_title.set_kind(SpriteKind.text)
     scores = settings.read_number_array("high_scores")
-    if not (scores):
-        empty_msg = textsprite.create("No hi ha dades", 0, 2)
+    if not scores:
+        empty_msg = textsprite.create("No hi ha dades", 1, 10)
         empty_msg.set_position(80, 60)
         empty_msg.set_kind(SpriteKind.text)
     else:
         i = 0
         while i <= len(scores) - 1:
             score_val = scores[i]
-            row = textsprite.create("" + str((i + 1)) + ". " + ("" + str(score_val)), 0, 2)
+            row = textsprite.create("" + ("" + str((i + 1))) + ". " + ("" + ("" + str(score_val))),
+                1,
+                10)
             row.set_position(80, 35 + i * 15)
             row.set_kind(SpriteKind.text)
             i += 1
-    score_back = textsprite.create("PREM B PER TORNAR", 0, 3)
+    score_back = textsprite.create("PREM B PER TORNAR", 1, 4)
     score_back.set_position(80, 105)
     score_back.set_kind(SpriteKind.text)
-# # OVERLAP
+# # Overlap dels textos del menú principal
 
 def on_on_overlap(sprite2, otherSprite2):
     if otherSprite2 == play:
@@ -51,10 +74,21 @@ def on_on_overlap(sprite2, otherSprite2):
             start_story()
 sprites.on_overlap(SpriteKind.player, SpriteKind.text, on_on_overlap)
 
-# # FUNCIONS
-# ## CANVI DE PANTALLES
+# # Tecla esquerra
+
+def on_left_pressed():
+    if scene2 != 1:
+        animation.run_image_animation(player_marcel,
+            assets.animation("""
+                marcel_walk_left
+                """),
+            100,
+            False)
+controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
+
+# # Canviar a menu
 def start_menu():
-    global scene2, title, play, story, leaderboard, nena
+    global scene2, title, play, story, leaderboard, player_marcel
     scene2 = 0
     scene.set_background_image(assets.image("""
         start_bg
@@ -73,62 +107,32 @@ def start_menu():
     play.set_flag(SpriteFlag.GHOST, False)
     story.set_flag(SpriteFlag.GHOST, False)
     leaderboard.set_flag(SpriteFlag.GHOST, False)
-    nena = sprites.create(assets.image("""
+    player_marcel = sprites.create(assets.image("""
         marcel_idle
         """), SpriteKind.player)
-    controller.move_sprite(nena)
-    nena.set_stay_in_screen(True)
+    controller.move_sprite(player_marcel)
+    player_marcel.set_stay_in_screen(True)
     music.stop_all_sounds()
     music.play(music.string_playable("C5 G B A F A C5 B ", 120),
         music.PlaybackMode.LOOPING_IN_BACKGROUND)
-
-def on_right_pressed():
-    if scene2 != 1:
-        animation.run_image_animation(nena,
-            assets.animation("""
-                marcel_walk_right0
-                """),
-            100,
-            False)
-controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
-
-def on_left_pressed():
-    if scene2 != 1:
-        animation.run_image_animation(nena,
-            assets.animation("""
-                marcel_walk_left
-                """),
-            100,
-            False)
-controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
-
-def on_a_pressed():
-    if scene2 == 1 and nena.y >= ground_y:
-        nena.vy = -260
-controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
-
-def on_b_pressed():
-    if scene2 == 2:
-        prepare_transition()
-        start_menu()
-controller.B.on_event(ControllerButtonEvent.PRESSED, on_b_pressed)
-
+# # Transicions de pantalles
 def prepare_transition():
     sprites.destroy_all_sprites_of_kind(SpriteKind.text)
     sprites.destroy_all_sprites_of_kind(SpriteKind.player)
     sprites.destroy_all_sprites_of_kind(SpriteKind.enemy)
-# ## PUNTUACIONS
+# # Guardar la puntuació
 def save_score(new_score: number):
     scores2 = settings.read_number_array("high_scores")
-    if not (scores2):
+    if not scores2:
         scores2 = []
     scores2.append(new_score)
     scores2.sort()
     scores2.reverse()
     scores2 = scores2.slice(0, 5)
     settings.write_number_array("high_scores", scores2)
+# # Començar la partida
 def start_game():
-    global scene2, nena
+    global scene2, player_marcel
     prepare_transition()
     scene2 = 1
     scene.set_background_image(assets.image("""
@@ -136,13 +140,13 @@ def start_game():
         """))
     info.set_life(3)
     info.set_score(0)
-    nena = sprites.create(assets.image("""
+    player_marcel = sprites.create(assets.image("""
         marcel_idle
         """), SpriteKind.player)
-    nena.set_position(20, ground_y)
-    nena.ay = 600
-    nena.set_stay_in_screen(True)
-    animation.run_image_animation(nena,
+    player_marcel.set_position(20, ground_y)
+    player_marcel.ay = 600
+    player_marcel.set_stay_in_screen(True)
+    animation.run_image_animation(player_marcel,
         assets.animation("""
             marcel_walk_right0
             """),
@@ -151,6 +155,7 @@ def start_game():
     music.stop_all_sounds()
     music.play(music.string_playable("G B A G C5 B A B ", 120),
         music.PlaybackMode.LOOPING_IN_BACKGROUND)
+# # Overlap d'un obstacle
 
 def on_on_overlap2(sprite3, otherSprite3):
     global already_scored
@@ -164,6 +169,19 @@ def on_on_overlap2(sprite3, otherSprite3):
         save_score(info.score())
 sprites.on_overlap(SpriteKind.player, SpriteKind.enemy, on_on_overlap2)
 
+# # Tecla dreta
+
+def on_right_pressed():
+    if scene2 != 1:
+        animation.run_image_animation(player_marcel,
+            assets.animation("""
+                marcel_walk_right0
+                """),
+            100,
+            False)
+controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
+
+# # Començar la historia
 def start_story():
     prepare_transition()
     scene.set_background_image(assets.image("""
@@ -183,19 +201,20 @@ def start_story():
         """))
     game.show_long_text("VAL MÉS QUE M'AFANYI SI VULL ACONSEGUIR UN DONUT",
         DialogLayout.BOTTOM)
-    start_menu()
+    start_game()
+# # Tecla abaix
 
-def on_up_pressed():
+def on_down_pressed():
     if scene2 != 1:
-        animation.run_image_animation(nena,
+        animation.run_image_animation(player_marcel,
             assets.animation("""
-                marcel_walk_up
+                marcel_walk_front
                 """),
             100,
             False)
-    elif scene2 == 1 and nena.y >= ground_y:
-        nena.vy = -260
-controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
+controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
+
+# # Overlap dels items
 
 def on_on_overlap3(sprite, otherSprite):
     otherSprite.destroy()
@@ -206,6 +225,7 @@ def on_on_overlap3(sprite, otherSprite):
         info.set_life(info.life() + 1)
 sprites.on_overlap(SpriteKind.player, SpriteKind.food, on_on_overlap3)
 
+# # Variables
 obstacle2: Sprite = None
 random_obstacle = 0
 coin: Sprite = None
@@ -218,15 +238,13 @@ leaderboard: TextSprite = None
 play: TextSprite = None
 score_back: TextSprite = None
 score_title: TextSprite = None
-nena: Sprite = None
+player_marcel: Sprite = None
 scene2 = 0
 ground_y = 0
 obstacle = None
-# Fet per Arnau Garcia i Pau Sole
-# # INPUTS
-# #INICI
 ground_y = 100
 score_to_win = 5000
+# # Inici del joc
 start_menu()
 # # UPDATES
 
@@ -237,9 +255,9 @@ def on_on_update():
     if info.score() >= score_to_win:
         save_score(info.score())
         game.over(True)
-    if nena.y > ground_y:
-        nena.y = ground_y
-        nena.vy = 0
+    if player_marcel.y > ground_y:
+        player_marcel.y = ground_y
+        player_marcel.vy = 0
 game.on_update(on_on_update)
 
 def on_update_interval():
