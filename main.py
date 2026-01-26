@@ -1,32 +1,19 @@
-# Fet per Arnau Garcia i Pau Sole
-# # INPUTS
-
-def on_up_pressed():
+def on_down_pressed():
     if scene2 != 1:
         animation.run_image_animation(nena,
             assets.animation("""
-                marcel_walk_up
+                marcel_walk_front
                 """),
             100,
             False)
-    elif scene2 == 1 and nena.y >= ground_y:
-        nena.vy = -260
-controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
-
-def on_b_pressed():
-    if scene2 == 2:
-        prepare_transition()
-        start_menu()
-controller.B.on_event(ControllerButtonEvent.PRESSED, on_b_pressed)
-
-def on_a_pressed():
-    if scene2 == 1 and nena.y >= ground_y:
-        nena.vy = -260
-controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
+controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
 
 def show_leaderboard():
     global scene2, score_title, score_back
     prepare_transition()
+    scene.set_background_image(assets.image("""
+        background_stats
+        """))
     scene2 = 2
     score_title = textsprite.create("TOP 5 PUNTUACIONS", 0, 3)
     score_title.set_position(80, 15)
@@ -64,16 +51,6 @@ def on_on_overlap(sprite2, otherSprite2):
             start_story()
 sprites.on_overlap(SpriteKind.player, SpriteKind.text, on_on_overlap)
 
-def on_left_pressed():
-    if scene2 != 1:
-        animation.run_image_animation(nena,
-            assets.animation("""
-                marcel_walk_left
-                """),
-            100,
-            False)
-controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
-
 # # FUNCIONS
 # ## CANVI DE PANTALLES
 def start_menu():
@@ -101,6 +78,41 @@ def start_menu():
         """), SpriteKind.player)
     controller.move_sprite(nena)
     nena.set_stay_in_screen(True)
+    music.stop_all_sounds()
+    music.play(music.string_playable("C5 G B A F A C5 B ", 120),
+        music.PlaybackMode.LOOPING_IN_BACKGROUND)
+
+def on_right_pressed():
+    if scene2 != 1:
+        animation.run_image_animation(nena,
+            assets.animation("""
+                marcel_walk_right0
+                """),
+            100,
+            False)
+controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
+
+def on_left_pressed():
+    if scene2 != 1:
+        animation.run_image_animation(nena,
+            assets.animation("""
+                marcel_walk_left
+                """),
+            100,
+            False)
+controller.left.on_event(ControllerButtonEvent.PRESSED, on_left_pressed)
+
+def on_a_pressed():
+    if scene2 == 1 and nena.y >= ground_y:
+        nena.vy = -260
+controller.A.on_event(ControllerButtonEvent.PRESSED, on_a_pressed)
+
+def on_b_pressed():
+    if scene2 == 2:
+        prepare_transition()
+        start_menu()
+controller.B.on_event(ControllerButtonEvent.PRESSED, on_b_pressed)
+
 def prepare_transition():
     sprites.destroy_all_sprites_of_kind(SpriteKind.text)
     sprites.destroy_all_sprites_of_kind(SpriteKind.player)
@@ -136,26 +148,21 @@ def start_game():
             """),
         50,
         True)
+    music.stop_all_sounds()
+    music.play(music.string_playable("G B A G C5 B A B ", 120),
+        music.PlaybackMode.LOOPING_IN_BACKGROUND)
 
 def on_on_overlap2(sprite3, otherSprite3):
     global already_scored
     otherSprite3.destroy()
+    music.play(music.melody_playable(music.pew_pew),
+        music.PlaybackMode.UNTIL_DONE)
     info.change_life_by(-1)
     scene.camera_shake(4, 500)
     if info.life() <= 0 and already_scored == False:
         already_scored = True
         save_score(info.score())
 sprites.on_overlap(SpriteKind.player, SpriteKind.enemy, on_on_overlap2)
-
-def on_right_pressed():
-    if scene2 != 1:
-        animation.run_image_animation(nena,
-            assets.animation("""
-                marcel_walk_right0
-                """),
-            100,
-            False)
-controller.right.on_event(ControllerButtonEvent.PRESSED, on_right_pressed)
 
 def start_story():
     prepare_transition()
@@ -178,18 +185,22 @@ def start_story():
         DialogLayout.BOTTOM)
     start_menu()
 
-def on_down_pressed():
+def on_up_pressed():
     if scene2 != 1:
         animation.run_image_animation(nena,
             assets.animation("""
-                marcel_walk_front
+                marcel_walk_up
                 """),
             100,
             False)
-controller.down.on_event(ControllerButtonEvent.PRESSED, on_down_pressed)
+    elif scene2 == 1 and nena.y >= ground_y:
+        nena.vy = -260
+controller.up.on_event(ControllerButtonEvent.PRESSED, on_up_pressed)
 
 def on_on_overlap3(sprite, otherSprite):
     otherSprite.destroy()
+    music.play(music.melody_playable(music.ba_ding),
+        music.PlaybackMode.UNTIL_DONE)
     info.change_score_by(100)
     if random_coin == 5 and info.life() < 3:
         info.set_life(info.life() + 1)
@@ -211,6 +222,8 @@ nena: Sprite = None
 scene2 = 0
 ground_y = 0
 obstacle = None
+# Fet per Arnau Garcia i Pau Sole
+# # INPUTS
 # #INICI
 ground_y = 100
 score_to_win = 5000
@@ -263,11 +276,11 @@ def on_update_interval2():
             """)
     elif random_obstacle == 2:
         obs_img = assets.image("""
-            obstacle_002
+            obstacle_2
             """)
     else:
         obs_img = assets.image("""
-            obstacle_03
+            obstacle_3
             """)
     obstacle2 = sprites.create(obs_img, SpriteKind.enemy)
     obstacle2.set_position(160, ground_y)
