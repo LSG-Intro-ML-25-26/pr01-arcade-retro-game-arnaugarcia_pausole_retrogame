@@ -25,3 +25,6 @@
 - Hi ha 3 tipus de menjar: pizza, hamburgesa i donut.
 - Quan s'obté algo de menjar, es suma 100 punts a la puntuació. Adicionalment, quan s'obté un donut, es recupera 1 vida, si no es té la vida màxima.
 <img width="318" height="89" alt="{BBC838BB-19D3-4EE4-9BD0-F061EEDD1839}" src="https://github.com/user-attachments/assets/2818a4c1-6e33-4267-9260-13ec4aa475f6" />
+
+## Speedrun
+- Aquí està el vídeo del speedrun: https://drive.google.com/file/d/1umaMgWUtVtDaGRN7rZqedLdFEViKz-y3/view?usp=sharing
